@@ -30,7 +30,7 @@ auth = firebase.auth()
 db = firebase.database()
 
 #to keep session data for client or lawyer
-provider = {"is_logged_in": False, "name": "", "email": "", "lid": ""}
+provider = {"is_logged_in": False, "name": "", "email": "", "lid": "","phone":""}
 client = {"is_logged_in": False, "name": "", "email": "", "lid": ""}
 
 
@@ -83,30 +83,31 @@ def provider_register():
 @app.route("/client_register",methods=['GET','POST'])
 def client_register():
     if request.method == 'POST':
-        username = request.form['username']
+        username = request.form['name']
         password = request.form['pswd']
+        phone = request.form['phone']
         email = request.form['email']
        
         
         
         
-        try:
-            #Try creating the user account using the provided data
-            auth.create_user_with_email_and_password(email, password)
-            #Login the user
-            law = auth.sign_in_with_email_and_password(email, password)
-            provider["is_logged_in"] = True
-            provider["email"] = law["email"]
-            provider["name"] = username
-            provider["uid"] = law["localId"]
-            # db.child("LegalSathi").child("lawyers").child(fullname).update({'address':address,'email':email,'bio':bio,'experience':experience,'name':fullname,'phone':phno,'qualification':qualification,'speciality':speciality,'token':50,'rate':rate})
-            # db.child("LegalSathi").child("token").update({fullname:50})
-            flash("Account Created Successfully")
-            return redirect(url_for('clientHome'))
-        except:
-            #If there is any error, redirect back to login
-            flash("Account not Created")
-            return redirect(url_for('lawyer_register'))
+        #Try creating the user account using the provided data
+        auth.create_user_with_email_and_password(email, password)
+        #Login the user
+        law = auth.sign_in_with_email_and_password(email, password)
+        client["is_logged_in"] = True
+        client["email"] = law["email"]
+        client["name"] = username
+        client["phone"]=phone
+        client["uid"] = law["localId"]
+        print(client)
+        db.child('Client').child('Names').update({phone:username})
+        # db.child("LegalSathi").child("token").update({fullname:50})
+        flash("Account Created Successfully")
+        return redirect(url_for('clientHome'))
+             #If there is any error, redirect back to login
+        # flash("Account not Created")
+        # return redirect(url_for('client_register'))
         
         
         
@@ -119,12 +120,13 @@ def client_login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['pswd']        
-        # fullname = request.form['username']
+        phone=request.form['phone']
         try:
             law=auth.sign_in_with_email_and_password(email, password)
-            provider["is_logged_in"] = True
-            provider["email"] = law["email"]
-            # provider["name"] = fullname
+            fullname = db.child('Client').child('Names').child(phone).get().val()
+            client["is_logged_in"] = True
+            client["email"] = law["email"]
+            client["name"] = fullname
             flash("Lawyer Logged In Successfully")
             return redirect(url_for('clientHome'))
         except:
@@ -170,28 +172,11 @@ def clientHome():
     
     return render_template("index.html")
 
-@app.route("/profile", methods=["POST","GET"])
-def lawyerprofile():
-    data=data=db.child("LegalSathi").child("lawyers").child(provider["name"]).get()
-    return render_template("profile.html",data=data.val())
 
 
 
 
-# @app.route("/leaderboard")
-# def leaderboard():
-#     data=db.child("LegalSathi").child("token").get().val()
-#     print(client['email'])
-#     sortedDict = sorted(data.items(), key=lambda x:x[1])
-#     name =[]
-#     token=[]
-#     for i in range(len(sortedDict)-1,-1,-1):
-#           f = sortedDict[i]
-#           name.append(f[0])
-#           token.append(f[1])
-          
-    
-#     return render_template("leaderBoard.html",board=zip(name,token),lawyer=provider['name'])
+
 
 
 @app.route('/services',methods=['POST','GET'])
@@ -200,7 +185,11 @@ def services():
 
 @app.route('/request',methods=['GET','POST'])
 def req():
-    return render_template('forms.html')
+    return render_template('request.html')
+
+@app.route('/orders',methods=['GET','POST'])
+def orders():
+    return render_template('order.html')
          
 
              
@@ -209,29 +198,7 @@ def req():
 
     
 
-# @app.route('/chat',methods=['POST','GET'])
-# def chat():
-#     if request.method == 'POST':
-#         return redirect('http://localhost:3000')
 
-
-@app.route('/probono',methods=['POST','GET'])
-def probono():
-    # if request.method == 'POST':
-    #     return redirect('http://localhost:3000')
-    return
-
-@app.route('/postcase',methods=['POST','GET'])
-def postacase():
-    # if request.method == 'POST':
-    #     return redirect('http://localhost:3000')
-    return
-
-@app.route('/payments',methods=['POST','GET'])
-def payment():
-    # if request.method == 'POST':
-    #     return redirect('http://localhost:3000')
-    return
 
         
 

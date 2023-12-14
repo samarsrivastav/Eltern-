@@ -1,0 +1,24 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+h3{
+    font-size: 30px;
+    margin: 40px;
+}
+
+body{
+    min-height: 100%;
+}
+
+
+.services{
+    width: 30%;
+    border: 2px solid black;
+    height: 30%;
+    padding: 15px;
+    border-radius: 15px;
+    margin: 90px auto;
+
+}
