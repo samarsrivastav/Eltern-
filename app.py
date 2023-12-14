@@ -194,101 +194,19 @@ def lawyerprofile():
 #     return render_template("leaderBoard.html",board=zip(name,token),lawyer=provider['name'])
 
 
+@app.route('/services',methods=['POST','GET'])
+def services():
+    return render_template('services.html')
 
-@app.route("/lawyerdetails", methods=["POST","GET"])
-def lawyerdetails():
-    name= request.args.get('name')
-    data=db.child("LegalSathi").child("lawyers").child(name).get().val()
-    return render_template("lawyerDetails.html",items=data)
-
+@app.route('/request',methods=['GET','POST'])
+def req():
+    return render_template('forms.html')
          
-@app.route('/casehire', methods=["POST","GET"])
-def add_token():
-    
-    
-    if request.method == 'POST':
-        name= request.args.get('name')
-        exis_token = db.child('LegalSathi').child("lawyers").child(name).child("token").get().val()
-        assign_hire_token = 50 +exis_token
-        
-        
-        # if not username:
-        #     return jsonify({
-        #         "message": "Invalid username"
-        #     }), 400
-        
-        # if not token:
-        #     return jsonify({
-        #         "message": "Token not found"
-        #     }), 400
-        
-        # Update the tokens in Firebase
-        print(client["name"])
-        speciality=db.child('LegalSathi').child("lawyers").child(name).child("speciality").get().val()
-        # db.child('LegalSathi').child("tokenupdated").child(name).update(assign_hire_token)
-        db.child('LegalSathi').child("lawyers").child(name).update({"token":assign_hire_token})
-        db.child('LegalSathi').child("token").update({name:assign_hire_token})
-        db.child('LegalSathi').child("lawyerclient").child(name).child(client["name"]).update({"specialty":speciality})
-        #return the required template 
-        data=db.child("LegalSathi").child("lawyers").child(name).get().val()
-        flash("Lawyer: "+name+" is hired for your case")
-        return render_template("lawyerDetails.html",show=True,items=data)
+
              
-@app.route('/currentcase', methods=["POST","GET"])
-def currentcase():
 
-    data=db.child('LegalSathi').child("lawyerclient").child(provider["name"]).get().val()
-    print(data)
-    if data==None :
-        flash("No Ongoing Cases")
-        return render_template("currentcase.html")
-        
-    else:
-        items=[]
-        for details in data:
-            speciality=data=db.child('LegalSathi').child("lawyerclient").child(provider["name"]).child(details).child("specialty").get().val()
-            items.append([details,speciality])
-        print(items)
-        return render_template("currentcase.html",items=items)
     
-@app.route('/access',methods=['POST','GET'])
-def access():
-    tool= request.args.get('tool')
-    if request.method == 'POST':
-        
-        
-        exis_token = db.child('LegalSathi').child("lawyers").child(provider["name"]).child("token").get().val()
-        if tool =="docasst":
-            if exis_token <= 30:
-                flash("You do not have enough tokens to redeem for accessing this tool")
-                return redirect(url_for('access'))
-            else:
-                assign_token = exis_token-30
-                db.child('LegalSathi').child("lawyers").child(provider["name"]).update({"token":assign_token})
-                return redirect('http://localhost:8501')
 
-
-
-        elif tool =="docsum":
-            if exis_token <= 10:
-                flash("You do not have enough tokens to redeem for accessing the tool")
-                return redirect(url_for('access'))
-            else:
-                assign_token = exis_token-10
-                db.child('LegalSathi').child("lawyers").child(provider["name"]).update({"token":assign_token})
-                return redirect('http://localhost:8502')
-        elif tool =="docclass":
-            if exis_token <= 20:
-                flash("You do not have enough tokens to redeem for accessing the tool")
-                return redirect(url_for('access'))
-            else:
-                assign_token = exis_token-20
-                db.child('LegalSathi').child("lawyers").child(provider["name"]).update({"token":assign_token})
-                return redirect('http://localhost:8503')
-        else:
-            return redirect(url_for('access'))
-    else:
-        return render_template("subscription.html")
     
 
 # @app.route('/chat',methods=['POST','GET'])
