@@ -260,6 +260,7 @@ def approve():
         Approve=db.child("Orders").child(name).child('Approve').get().val()
         db.child('Orders').child(name).update({'Approve':True})
         db.child('Client-Provider').child(provider["name"]).update({'Cname':Cname,'Address':Address,"date":date,"Pname":Pname,"Service":service,"Pphone":Pphone,})
+        flash("Request from "+name+" has been accepted succesfully. ")
         return redirect(url_for('providerHome'))
         
 
