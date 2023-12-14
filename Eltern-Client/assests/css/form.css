@@ -11,7 +11,6 @@ select {
     outline: none;
     font-family: Roboto, Arial, sans-serif;
     font-size: 16px;
-    background: linear-gradient(to top, #c07777, #9b3d3d);
 }
 
 h1,
@@ -44,7 +43,7 @@ h3 {
 form {
     line-height: 40px;
     width: 30%;
-    padding: 30px;
+    padding: 50px;
     margin-bottom: 20px;
     background: rgb(182, 50, 50);
     box-shadow: 5px 20px 50px #000;
