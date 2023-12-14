@@ -50,32 +50,42 @@ def landing():
 def provider_register():
 
     if request.method == 'POST':
-        username = request.form['username']
+        username = request.form['name']
+        password = request.form['pswd']
+        phone = request.form['phone']
         email = request.form['email']
-        password = request.form['pass']
-             #Try signing in the user with the given information
+       
+        
+        
         try:
 
-            user = auth.sign_in_with_email_and_password(email, password)
-            #Insert the user data in the global person
-            global client
+            #Try creating the user account using the provided data
+            auth.create_user_with_email_and_password(email, password)
+            #Login the user
+            law = auth.sign_in_with_email_and_password(email, password)
             client["is_logged_in"] = True
-            client["email"] = user["email"]
+            client["email"] = law["email"]
             client["name"] = username
-            client["uid"] = user["localId"]
-            flash("Logged In Successfully")
-            return redirect(url_for('clientHome'))
-        
-            #If there is any error, redirect back to login
-            # return redirect(url_for('client_register'))
+            client["phone"]=phone
+            client["uid"] = law["localId"]
+            print(client)
+            db.child('Provider').child('Names').update({phone:username})
+            # db.child("LegalSathi").child("token").update({fullname:50})
+            flash("Account Created Successfully")
+            return redirect(url_for('providerHome'))
+             #If there is any error, redirect back to login
+        # flash("Account not Created")
+        # return redirect(url_for('client_register'))
         except:
-            #If there is any error, redirect back to login
-            flash("Login not Successful")
-            return redirect(url_for('client_register'))
+            flash("Account not Found Please Register")
+            return redirect("provider_login") 
+
         
- 
+        
+        
+        
     else:
-        return render_template("AuthenticationProvider.html")
+        return render_template('AuthenticationProvider.html')
     
 
 
@@ -149,15 +159,16 @@ def client_login():
 def provider_login():
     if request.method == 'POST':
         email = request.form['email']
-        password = request.form['pass']        
-        fullname = request.form['username']
+        password = request.form['pswd']        
+        phone=request.form['phone']
         try:
             law=auth.sign_in_with_email_and_password(email, password)
-            provider["is_logged_in"] = True
-            provider["email"] = law["email"]
-            provider["name"] = fullname
-            flash("Provider Logged In Successfully")
-            return redirect(url_for('lawyerprofile'))
+            fullname = db.child('Provider').child('Names').child(phone).get().val()
+            client["is_logged_in"] = True
+            client["email"] = law["email"]
+            client["name"] = fullname
+            flash("Client Logged In Successfully")
+            return redirect(url_for('providerHome'))
         except:
             flash("Account not Found Please Register")
             return redirect("provider_login")    
@@ -176,6 +187,27 @@ def provider_login():
 def clientHome():
     
     return render_template("index.html")
+
+@app.route("/providerhome", methods=["POST","GET"])
+def providerHome():
+    data=db.child("Orders").get().val()
+    l=[]
+    print(data)
+    for datas in data:
+        
+        
+        service=db.child("Orders").child(datas).child('service').get().val()
+        Address=db.child("Orders").child(datas).child('Address').get().val()
+        date=db.child("Orders").child(datas).child('date').get().val()
+        Pname=db.child("Orders").child(datas).child('Pname').get().val()
+        Cname=db.child("Orders").child(datas).child('Cname').get().val()
+        Pphone=db.child("Orders").child(datas).child('Pphone').get().val()
+        Approve=db.child("Orders").child(datas).child('Approve').get().val()
+        
+        if Approve==False:
+            l.append([service,Address,date,Pname,Pphone,Cname])
+
+    return render_template("Providerindex.html",info=l)
 
 
 
@@ -201,7 +233,7 @@ def req():
         
         db.child('Orders').child(client["name"]).update({"Cname":Cname,"date":date,"service":service,"Pname":Pname,"Pphone":Pphone,"Address":addr,"Cemail":client["email"],"Approve":False})
         flash("Thank you for trusting us. Your Service is placed and is under process")
-        return redirect("req")
+        return redirect(url_for("req"))
 
 
     return render_template('request.html')
@@ -211,6 +243,25 @@ def orders():
     data=db.child("Orders").child(client["name"]).get().val()
     return render_template('order.html',data=data)
 
+
+# @app.route('/approve',methods=['POST','GET'])
+# def approve():
+#     if request.method == 'POST':
+#         name= request.args.get('name')
+#         service=db.child("Orders").child(datas).child('service').get().val()
+#         Address=db.child("Orders").child(datas).child('Address').get().val()
+#         date=db.child("Orders").child(datas).child('date').get().val()
+#         Pname=db.child("Orders").child(datas).child('Pname').get().val()
+#         Cname=db.child("Orders").child(datas).child('Cname').get().val()
+#         Pphone=db.child("Orders").child(datas).child('Pphone').get().val()
+#         Approve=db.child("Orders").child(datas).child('Approve').get().val()
+        
+
+        
+
+        
+
+    
 
          
 
