@@ -44,10 +44,10 @@ def landing():
     provider["is_logged_in"] = False
     provider["email"] = ""
     provider["name"] = ""
-    return render_template("index.html")
+    return render_template("Landing.html")
 
-@app.route("/client_register",methods=['GET','POST'])
-def client_register():
+@app.route("/provider_register",methods=['GET','POST'])
+def provider_register():
 
     if request.method == 'POST':
         username = request.form['username']
@@ -75,26 +75,19 @@ def client_register():
         
  
     else:
-        return render_template("register_client.html")
+        return render_template("AuthenticationProvider.html")
     
 
 
 
-@app.route("/provider_register",methods=['GET','POST'])
-def lawyer_register():
+@app.route("/client_register",methods=['GET','POST'])
+def client_register():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['pass']
+        password = request.form['pswd']
+        email = request.form['email']
        
-        fullname = request.form['fullname']
-        email = request.form['e-mail']
-        rate=int(request.form['cost'])
-        phno = request.form['number']
-        address = request.form['city']
-        experience = request.form['experience']
-        speciality= request.form['Speciality']
-        qualification = request.form['qualification']
-        bio = request.form['bio']
+        
         
         
         try:
@@ -104,12 +97,12 @@ def lawyer_register():
             law = auth.sign_in_with_email_and_password(email, password)
             provider["is_logged_in"] = True
             provider["email"] = law["email"]
-            provider["name"] = fullname
+            provider["name"] = username
             provider["uid"] = law["localId"]
-            db.child("LegalSathi").child("lawyers").child(fullname).update({'address':address,'email':email,'bio':bio,'experience':experience,'name':fullname,'phone':phno,'qualification':qualification,'speciality':speciality,'token':50,'rate':rate})
-            db.child("LegalSathi").child("token").update({fullname:50})
+            # db.child("LegalSathi").child("lawyers").child(fullname).update({'address':address,'email':email,'bio':bio,'experience':experience,'name':fullname,'phone':phno,'qualification':qualification,'speciality':speciality,'token':50,'rate':rate})
+            # db.child("LegalSathi").child("token").update({fullname:50})
             flash("Account Created Successfully")
-            return redirect(url_for('lawyerprofile'))
+            return redirect(url_for('clientHome'))
         except:
             #If there is any error, redirect back to login
             flash("Account not Created")
@@ -119,10 +112,34 @@ def lawyer_register():
         
         
     else:
-        return render_template('register_lawyer.html')
+        return render_template('Authentication.html')
     
-@app.route("/lawyer_login",methods=['GET','POST'])
-def lawyer_login():
+@app.route("/client_login",methods=['GET','POST'])
+def client_login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['pswd']        
+        # fullname = request.form['username']
+        try:
+            law=auth.sign_in_with_email_and_password(email, password)
+            provider["is_logged_in"] = True
+            provider["email"] = law["email"]
+            # provider["name"] = fullname
+            flash("Lawyer Logged In Successfully")
+            return redirect(url_for('clientHome'))
+        except:
+            flash("Account not Found Please Register")
+            return redirect("client_login")    
+      
+        
+        
+        
+        
+        
+    else:
+        return render_template("Authentication.html")  
+@app.route("/provider_login",methods=['GET','POST'])
+def provider_login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['pass']        
@@ -136,7 +153,7 @@ def lawyer_login():
             return redirect(url_for('lawyerprofile'))
         except:
             flash("Account not Found Please Register")
-            return redirect("lawyer_login")    
+            return redirect("provider_login")    
       
         
         
@@ -144,14 +161,14 @@ def lawyer_login():
         
         
     else:
-        return render_template("lawyer_login.html")  
+        return render_template("AuthenticationProvider.html") 
 
     
 
 @app.route("/clienthome", methods=["POST","GET"])
 def clientHome():
     
-    return render_template("clientHome.html")
+    return render_template("index.html")
 
 @app.route("/profile", methods=["POST","GET"])
 def lawyerprofile():
@@ -161,124 +178,22 @@ def lawyerprofile():
 
 
 
-@app.route("/leaderboard")
-def leaderboard():
-    data=db.child("LegalSathi").child("token").get().val()
-    print(client['email'])
-    sortedDict = sorted(data.items(), key=lambda x:x[1])
-    name =[]
-    token=[]
-    for i in range(len(sortedDict)-1,-1,-1):
-          f = sortedDict[i]
-          name.append(f[0])
-          token.append(f[1])
+# @app.route("/leaderboard")
+# def leaderboard():
+#     data=db.child("LegalSathi").child("token").get().val()
+#     print(client['email'])
+#     sortedDict = sorted(data.items(), key=lambda x:x[1])
+#     name =[]
+#     token=[]
+#     for i in range(len(sortedDict)-1,-1,-1):
+#           f = sortedDict[i]
+#           name.append(f[0])
+#           token.append(f[1])
           
     
-    return render_template("leaderBoard.html",board=zip(name,token),lawyer=provider['name'])
+#     return render_template("leaderBoard.html",board=zip(name,token),lawyer=provider['name'])
 
-@app.route("/lawyerfilter", methods=["POST","GET"])
-def lawyerfilter():
-    data=db.child("LegalSathi").child("token").get().val()
-    sortedDict = sorted(data.items(), key=lambda x:x[1])
-    name =[]
-    token=[]
-    for i in range(len(sortedDict)-1,-1,-1):
-          f = sortedDict[i]
-          name.append(f[0])
-          token.append(f[1])
-    items=[]
-    if request.method == 'POST':
-        rate = int(request.form['rate'])
-        speciality= request.form['speciality']
-        location= request.form['location']
-        print(rate,speciality,location)
-        if(rate != "none" and speciality != "none" and location != "none" ):
-            
-    
-            
-            for i in range(len(sortedDict)):
-                spec=db.child("LegalSathi").child("lawyers").child(name[i]).child("speciality").get().val()
-                loc=db.child("LegalSathi").child("lawyers").child(name[i]).child("address").get().val()
-                exp=db.child("LegalSathi").child("lawyers").child(name[i]).child("rate").get().val()
-                print(spec,loc,exp)
-                if(spec == speciality and loc == location and  exp <= rate):
-                    items.append([name[i],exp,loc])
-            return render_template('ClientLawyer.html',items=items)
-        else:
-            if(rate != "none" and speciality != "none"):
-                 
-            
-                for i in range(len(sortedDict)):
-                    spec=db.child("LegalSathi").child("lawyers").child(name[i]).child("speciality").get().val()
-                    loc=db.child("LegalSathi").child("lawyers").child(name[i]).child("address").get().val()
-                    exp=db.child("LegalSathi").child("lawyers").child(name[i]).child("rate").get().val()
-                    print(spec,loc,exp)
-                    if(spec == speciality and  exp <= rate):
-                        items.append([name[i],exp,loc])
-                return render_template('ClientLawyer.html',items=items)
-            elif(speciality != "none" and location != "none"):
-                 
-            
-                for i in range(len(sortedDict)):
-                    spec=db.child("LegalSathi").child("lawyers").child(name[i]).child("speciality").get().val()
-                    loc=db.child("LegalSathi").child("lawyers").child(name[i]).child("address").get().val()
-                    exp=db.child("LegalSathi").child("lawyers").child(name[i]).child("rate").get().val()
-                    print(spec,loc,exp)
-                    if(spec == speciality and  loc == location):
-                        items.append([name[i],exp,loc])
-                return render_template('ClientLawyer.html',items=items)
-            elif(rate != "none" and location != "none"):
-                  
-            
-                for i in range(len(sortedDict)):
-                    spec=db.child("LegalSathi").child("lawyers").child(name[i]).child("speciality").get().val()
-                    loc=db.child("LegalSathi").child("lawyers").child(name[i]).child("address").get().val()
-                    exp=db.child("LegalSathi").child("lawyers").child(name[i]).child("rate").get().val()
-                    print(spec,loc,exp)
-                    if(exp <= rate and  loc == location):
-                        items.append([name[i],exp,loc])
-                return render_template('ClientLawyer.html',items=items)
-            elif(rate != "none"):
-                 
-            
-                for i in range(len(sortedDict)):
-                    spec=db.child("LegalSathi").child("lawyers").child(name[i]).child("speciality").get().val()
-                    loc=db.child("LegalSathi").child("lawyers").child(name[i]).child("address").get().val()
-                    exp=db.child("LegalSathi").child("lawyers").child(name[i]).child("rate").get().val()
-                    
-                    print(spec,loc,exp)
-                    if(exp <= rate ):
-                        items.append([name[i],exp,loc])
-                return render_template('ClientLawyer.html',items=items)
-            elif(speciality != "none"):
-                  
-            
-                for i in range(len(sortedDict)):
-                    spec=db.child("LegalSathi").child("lawyers").child(name[i]).child("speciality").get().val()
-                    loc=db.child("LegalSathi").child("lawyers").child(name[i]).child("address").get().val()
-                    exp=db.child("LegalSathi").child("lawyers").child(name[i]).child("rate").get().val()
-                    print(spec,loc,exp)
-                    if(spec == speciality ):
-                        items.append([name[i],exp,loc])
-                return render_template('ClientLawyer.html',items=items)
-            else:
-                 
-            
-                for i in range(len(sortedDict)):
-                    spec=db.child("LegalSathi").child("lawyers").child(name[i]).child("speciality").get().val()
-                    loc=db.child("LegalSathi").child("lawyers").child(name[i]).child("address").get().val()
-                    exp=db.child("LegalSathi").child("lawyers").child(name[i]).child("rate").get().val()
-                    print(spec,loc,exp)
-                    if(loc == location ):
-                        items.append([name[i],exp,loc])
-                return render_template('ClientLawyer.html',items=items)
-    else:
-        for i in range(len(sortedDict)):
-                spec=db.child("LegalSathi").child("lawyers").child(name[i]).child("speciality").get().val()
-                loc=db.child("LegalSathi").child("lawyers").child(name[i]).child("address").get().val()
-                exp=db.child("LegalSathi").child("lawyers").child(name[i]).child("rate").get().val()
-                items.append([name[i],exp,loc])
-        return render_template('ClientLawyer.html',items=items)
+
 
 @app.route("/lawyerdetails", methods=["POST","GET"])
 def lawyerdetails():
@@ -405,4 +320,4 @@ def payment():
     
 if __name__=="__main__":
     
-    app.run()
+    app.run(debug=True)
