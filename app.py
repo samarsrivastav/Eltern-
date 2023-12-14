@@ -212,7 +212,8 @@ def providerHome():
 
 @app.route('/Porder',methods=['POST','GET'])
 def porder():
-    return render_template('porder.html')
+    data=db.child('Client-Provider').child(provider["name"]).get().val()
+    return render_template('porder.html',data=data)
 
 
 
@@ -246,17 +247,20 @@ def orders():
     return render_template('order.html',data=data)
 
 
-# @app.route('/approve',methods=['POST','GET'])
-# def approve():
-#     if request.method == 'POST':
-#         name= request.args.get('name')
-#         service=db.child("Orders").child(datas).child('service').get().val()
-#         Address=db.child("Orders").child(datas).child('Address').get().val()
-#         date=db.child("Orders").child(datas).child('date').get().val()
-#         Pname=db.child("Orders").child(datas).child('Pname').get().val()
-#         Cname=db.child("Orders").child(datas).child('Cname').get().val()
-#         Pphone=db.child("Orders").child(datas).child('Pphone').get().val()
-#         Approve=db.child("Orders").child(datas).child('Approve').get().val()
+@app.route('/approve',methods=['POST','GET'])
+def approve():
+    if request.method == 'POST':
+        name= request.args.get('name')
+        service=db.child("Orders").child(name).child('service').get().val()
+        Address=db.child("Orders").child(name).child('Address').get().val()
+        date=db.child("Orders").child(name).child('date').get().val()
+        Pname=db.child("Orders").child(name).child('Pname').get().val()
+        Cname=db.child("Orders").child(name).child('Cname').get().val()
+        Pphone=db.child("Orders").child(name).child('Pphone').get().val()
+        Approve=db.child("Orders").child(name).child('Approve').get().val()
+        db.child('Orders').child(name).update({'Approve':True})
+        db.child('Client-Provider').child(provider["name"]).update({'Cname':Cname,'Address':Address,"date":date,"Pname":Pname,"Service":service,"Pphone":Pphone,})
+        return redirect(url_for('providerHome'))
         
 
         
