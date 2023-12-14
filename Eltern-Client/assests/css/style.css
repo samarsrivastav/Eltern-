@@ -1,6 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Pacifico&family=Prompt:ital@1&display=swap');
+
+
+a{
+  text-decoration: none;
+}
 .btn-link{
   text-decoration: none;
   color:antiquewhite;
+}
+
+
+.section{
+  width: 100%; 
+  display: flex;
+}
+
+.imagehome{
+  width: 450px;
+  height: 440px;
+  margin: 60px;
+}
+
+.section p{
+  font-size: 40px;
+  font-weight: bold;
+  margin: 231px 170px 140px 164px;
+  font-family: 'Dancing Script', serif;
 }
 .site-footer
 {

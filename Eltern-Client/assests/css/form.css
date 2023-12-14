@@ -18,6 +18,9 @@ h3 {
     font-weight: 400;
     color: rgb(255, 255, 255);
 }
+a{
+    text-decoration: none;
+}
 
 h1 {
     font-size: 32px;
@@ -38,6 +41,7 @@ h3 {
     display: flex;
     flex-direction: column;
     margin: 50px;
+    margin-bottom: 80px;
 }
 
 form {
@@ -46,7 +50,7 @@ form {
     padding: 50px;
     margin-bottom: 20px;
     background: rgb(182, 50, 50);
-    box-shadow: 5px 20px 50px #000;
+    box-shadow: 5px 20px 40px #000;
     border-radius: 20px;
 }
 
@@ -121,17 +125,17 @@ input[type="radio"]:checked+label:after {
     opacity: 1;
 }
 
-button {
+.submit {
     display: block;
-    /* width: 166px; */
-    padding: 10px;
-    border: none;
+    width: 131px;
+    /* height: 45px; */
+    padding: -1px;
     border-radius: 17px;
     background: rgb(141, 0, 0);
     font-size: 20px;
-    font-weight: 600;
     color: #fff;
     font-family: serif;
+    border: none;
 }
 
 button:hover {
