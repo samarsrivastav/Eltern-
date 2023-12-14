@@ -167,7 +167,7 @@ def provider_login():
             client["is_logged_in"] = True
             client["email"] = law["email"]
             client["name"] = fullname
-            flash("Client Logged In Successfully")
+            flash("Provider Logged In Successfully")
             return redirect(url_for('providerHome'))
         except:
             flash("Account not Found Please Register")
@@ -210,7 +210,9 @@ def providerHome():
     return render_template("Providerindex.html",info=l)
 
 
-
+@app.route('/Porder',methods=['POST','GET'])
+def porder():
+    return render_template('porder.html')
 
 
 
