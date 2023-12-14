@@ -23,10 +23,10 @@
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                <a class="nav-link active" aria-current="page" href="{{url_for('providerHome')}}">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="order.html">Orders</a>
+                <a class="nav-link" href="{{url_for('porder')}}">Orders</a>
               </li>
               <li>
                 <button type="button" class="btn btn-secondary" style="
@@ -43,7 +43,7 @@
     
               <li>
                 <button type="button" class="btn btn-danger" style="position: absolute; right: 30px">
-                  <a href="Authentication.html" class="btn-link"> Log-out</a>
+                  <a href="{{url_for('landing')}}" class="btn-link"> Log-out</a>
                 </button>
               </li>
             </ul>
