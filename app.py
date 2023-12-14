@@ -90,24 +90,29 @@ def client_register():
        
         
         
-        
-        #Try creating the user account using the provided data
-        auth.create_user_with_email_and_password(email, password)
-        #Login the user
-        law = auth.sign_in_with_email_and_password(email, password)
-        client["is_logged_in"] = True
-        client["email"] = law["email"]
-        client["name"] = username
-        client["phone"]=phone
-        client["uid"] = law["localId"]
-        print(client)
-        db.child('Client').child('Names').update({phone:username})
-        # db.child("LegalSathi").child("token").update({fullname:50})
-        flash("Account Created Successfully")
-        return redirect(url_for('clientHome'))
+        try:
+
+            #Try creating the user account using the provided data
+            auth.create_user_with_email_and_password(email, password)
+            #Login the user
+            law = auth.sign_in_with_email_and_password(email, password)
+            client["is_logged_in"] = True
+            client["email"] = law["email"]
+            client["name"] = username
+            client["phone"]=phone
+            client["uid"] = law["localId"]
+            print(client)
+            db.child('Client').child('Names').update({phone:username})
+            # db.child("LegalSathi").child("token").update({fullname:50})
+            flash("Account Created Successfully")
+            return redirect(url_for('clientHome'))
              #If there is any error, redirect back to login
         # flash("Account not Created")
         # return redirect(url_for('client_register'))
+        except:
+            flash("Account not Found Please Register")
+            return redirect("client_login") 
+
         
         
         
@@ -127,7 +132,7 @@ def client_login():
             client["is_logged_in"] = True
             client["email"] = law["email"]
             client["name"] = fullname
-            flash("Lawyer Logged In Successfully")
+            flash("Client Logged In Successfully")
             return redirect(url_for('clientHome'))
         except:
             flash("Account not Found Please Register")
@@ -151,7 +156,7 @@ def provider_login():
             provider["is_logged_in"] = True
             provider["email"] = law["email"]
             provider["name"] = fullname
-            flash("Lawyer Logged In Successfully")
+            flash("Provider Logged In Successfully")
             return redirect(url_for('lawyerprofile'))
         except:
             flash("Account not Found Please Register")
@@ -185,11 +190,28 @@ def services():
 
 @app.route('/request',methods=['GET','POST'])
 def req():
+    
+    if request.method == "POST":
+        Cname=request.form['Cname']
+        date=request.form['date']
+        service=request.form['service']
+        Pname=request.form['Pname']
+        Pphone=request.form['Pphone']
+        addr=request.form['addr']
+        
+        db.child('Orders').child(client["name"]).update({"Cname":Cname,"date":date,"service":service,"Pname":Pname,"Pphone":Pphone,"Address":addr,"Cemail":client["email"],"Approve":False})
+        flash("Thank you for trusting us. Your Service is placed and is under process")
+        return redirect("req")
+
+
     return render_template('request.html')
 
 @app.route('/orders',methods=['GET','POST'])
 def orders():
-    return render_template('order.html')
+    data=db.child("Orders").child(client["name"]).get().val()
+    return render_template('order.html',data=data)
+
+
          
 
              

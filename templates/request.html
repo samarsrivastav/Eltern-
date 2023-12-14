@@ -13,79 +13,78 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-dark navbar-expand-lg" style="background-color: rgb(182, 50, 50)">
-    <!-- navbar-dark navbar-expand-lg bg-dark -->
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#"><i class="fa-solid fa-person-breastfeeding"></i> ELtern </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="index.html">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="services.html">Services</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="order.html">Orders</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="request.html">Request</a>
-          </li>
-          <li>
-            <button type="button" class="btn btn-secondary" style="
-                  background-color: #503232;
-                  /* width: 30px;
-                  height: 30px;
-                  border-radius: 10px; */
-                  position: absolute;
-                  right: 120px;
-                ">
-              <i class="fa-solid fa-user"></i>
-            </button>
-          </li>
-
-          <li>
-            <button type="button" class="btn btn-danger" style="position: absolute; right: 30px">
-              <a href="Authentication.html" class="btn-link"> Log-out</a>
-            </button>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+    <nav class="navbar navbar-dark navbar-expand-lg" style="background-color: rgb(182, 50, 50)">
+        <!-- navbar-dark navbar-expand-lg bg-dark -->
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#"><i class="fa-solid fa-person-breastfeeding"></i> ELtern </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{url_for('services')}}">Services</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{url_for('orders')}}">Orders</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{url_for('req')}}">Request</a>
+              </li>
+              <li>
+                <button type="button" class="btn btn-secondary" style="
+                      background-color: #503232;
+                      /* width: 30px;
+                      height: 30px;
+                      border-radius: 10px; */
+                      position: absolute;
+                      right: 120px;
+                    ">
+                  <i class="fa-solid fa-user"></i>
+                </button>
+              </li>
+    
+              <li>
+                <button type="button" class="btn btn-danger" style="position: absolute; right: 30px">
+                  <a href="Authentication.html" class="btn-link"> Log-out</a>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
   <div class="main-block">
     <h1>REQUEST FORM</h1>
-    <form action="/">
+    <form action="{{url_for('req')}}" method="POST">
       <div class="info">
         <div class="sender">
         <center><h5>Sender Details</h5></center>
-        <input class="fname" type="text" name="name" placeholder="Full name" />
-        <input type="text" name="name" placeholder="Phone number" />
-        <input type="text" name="name" placeholder="Email" />
-        <input type="text" name="name" placeholder="Address" />
-        <input type="text" name="name" placeholder="Request Date" />
-        <select style="color:white">
-          <option value="number" disabled selected>Your Request</option>
-          <option value="10">Medic Support</option>
-          <option value="20">Blood Checkup</option>
-          <option value="30">Food Support</option>
-          <option value="40">Household Support</option>
-          <option value="50">Travelling Support</option>
-          <option value="60">Emergency Support</option>
+        <input class="fname" type="text" name="Cname" placeholder="Full name" />
+        
+        
+        <input type="date" name="date" placeholder="Request Date" />
+        <select name="service" style="color:white">
+          <option value="" disabled selected>Your Request</option>
+          <option value="Medic">Medic Support</option>
+          <option value="BCheckup">Blood Checkup</option>
+          <option value="Food">Food Support</option>
+          <option value="Household">Household Support</option>
+          <option value="Travel">Travelling Support</option>
+          <option value="Emergency">Emergency Support</option>
         </select>
       </div>
       <div class="recipient my-3">
         <center><h5>Recipient Details</h5></center>
-        <input class="fname" type="text" name="name" placeholder="Full name" />
-        <input type="text" name="name" placeholder="Phone number" />
-        <input type="text" name="name" placeholder="Address">
+        <input class="fname" type="text" name="Pname" placeholder="Full name" />
+        <input type="text" name="Pphone" placeholder="Phone number" />
+        <input type="text" name="addr" placeholder="Address" />
       </div>
       </div>
-      <button href="/" class="button">Submit</button>
+      <button href="/" type="submit" class="button">Submit</button>
     </form>
   </div>
   <!-- Site footer -->

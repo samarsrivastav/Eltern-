@@ -15,9 +15,10 @@
   </head>
   <body>
     {% for message in get_flashed_messages() %}
-  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <div class="alert alert-warning alert-dismissible fade show" style="
+  margin-right: 60px;
+" role="alert">
     <strong>{{message}}</strong>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
   {% endfor %}
     <div class="main">
@@ -28,7 +29,7 @@
       <div class="signup">
         
         <form action="{{url_for('client_register')}}"  method="POST">
-          <label for="chk" aria-hidden="true">Sign up</label>
+          <label for="chk" aria-hidden="true">Client Sign up</label>
           <input type="text" name="name" placeholder="User name" required="" />
           <input type="email" name="email" placeholder="Email" required="" />
           <input type="tel" name="phone" placeholder="Phone Number" required="" />
@@ -44,9 +45,9 @@
 
       <div class="login">
         <form action="{{url_for('client_login')}}" method="POST">
-          <label for="chk" aria-hidden="true">Login</label>
+          <label for="chk" aria-hidden="true">Client Login</label>
           <input type="email" name="email" placeholder="Email" required="" />
-          <input type="text" name="name" placeholder="User name" required="" />
+          <input type="tel" name="phone" placeholder="Phone Number" required="" />
           <input
             type="password"
             name="pswd"
