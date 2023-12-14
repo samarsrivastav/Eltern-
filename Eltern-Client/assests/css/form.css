@@ -123,9 +123,8 @@ input[type="radio"]:checked+label:after {
 
 button {
     display: block;
-    width: 166px;
+    /* width: 166px; */
     padding: 10px;
-    margin: 20px auto 0;
     border: none;
     border-radius: 17px;
     background: rgb(141, 0, 0);
