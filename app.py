@@ -249,6 +249,7 @@ def orders():
 
 @app.route('/approve',methods=['POST','GET'])
 def approve():
+    
     if request.method == 'POST':
         name= request.args.get('name')
         service=db.child("Orders").child(name).child('service').get().val()
@@ -259,9 +260,13 @@ def approve():
         Pphone=db.child("Orders").child(name).child('Pphone').get().val()
         Approve=db.child("Orders").child(name).child('Approve').get().val()
         db.child('Orders').child(name).update({'Approve':True})
+        print(name)
         db.child('Client-Provider').child(provider["name"]).update({'Cname':Cname,'Address':Address,"date":date,"Pname":Pname,"Service":service,"Pphone":Pphone,})
         flash("Request from "+name+" has been accepted succesfully. ")
-        return redirect(url_for('providerHome'))
+
+        return redirect('providerhome')
+    else:
+        return redirect('providerhome')
         
 
         
@@ -285,4 +290,4 @@ def approve():
     
 if __name__=="__main__":
     
-    app.run(debug=True,host='0.0.0.0',port=3000)
+    app.run(debug=True)

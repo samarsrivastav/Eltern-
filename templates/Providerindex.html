@@ -61,6 +61,7 @@
     <h3>Requests Details</h3>
   </center>
   {% for user in info %}
+  <form action="/approve?name={{user[5]}}" methods="POST">
   <div class="services">
     <!-- <p>Request ID: enifjdmd12</p> -->
     <p>Date:{{user[2]}} </p>
@@ -69,12 +70,14 @@
     <p>Client Phone No.: {{user[4]}}</p>
     <p>Address: {{user[1]}}</p>
     <center>
-    <form action="/approve?name={{user[5]}}" methods="POST">
-    <button type="button" class="btn btn-success btn-sm">Accept</button>
     
-</form>
+    <button type="submit" class="btn btn-success btn-sm">Accept</button>
+    
+
   </center>
+
   </div>
+</form>
   {% endfor %}
   <!-- footer -->
   <!-- Site footer -->
