@@ -266,8 +266,7 @@ def approve():
         flash("Request from "+name+" has been accepted succesfully. ")
 
         return redirect(url_for('providerHome'))
-    # else:
-    #     return redirect('providerhome')
+    
         
 
         
