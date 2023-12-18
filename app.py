@@ -29,14 +29,14 @@ firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
 db = firebase.database()
 
-#to keep session data for client or lawyer
+#to keep session data for client orr provider
 provider = {"is_logged_in": False, "name": "", "email": "", "lid": "","phone":""}
 client = {"is_logged_in": False, "name": "", "email": "", "lid": ""}
 
 
 @app.route("/")
 def landing():
-    #session out for both client or lawyer
+    #session out for both client or provider
     client["is_logged_in"] = False
     client["email"] = ""
     client["name"] = ""
