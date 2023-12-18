@@ -61,7 +61,7 @@
     <h3>Requests Details</h3>
   </center>
   {% for user in info %}
-  <form action="/approve?name={{user[5]}}" methods="POST">
+  <form action="/approve?name={{user[5]}}" method="POST">
   <div class="services">
     <!-- <p>Request ID: enifjdmd12</p> -->
     <p>Date:{{user[2]}} </p>
@@ -69,6 +69,7 @@
     <p>Client Name: {{user[3]}}</p>
     <p>Client Phone No.: {{user[4]}}</p>
     <p>Address: {{user[1]}}</p>
+    <p>Address: {{user[5]}}</p>
     <center>
     
     <button type="submit" class="btn btn-success btn-sm">Accept</button>

@@ -63,11 +63,11 @@ def provider_register():
             auth.create_user_with_email_and_password(email, password)
             #Login the user
             law = auth.sign_in_with_email_and_password(email, password)
-            client["is_logged_in"] = True
-            client["email"] = law["email"]
-            client["name"] = username
-            client["phone"]=phone
-            client["uid"] = law["localId"]
+            provider["is_logged_in"] = True
+            provider["email"] = law["email"]
+            provider["name"] = username
+            provider["phone"]=phone
+            provider["uid"] = law["localId"]
             print(client)
             db.child('Provider').child('Names').update({phone:username})
             # db.child("LegalSathi").child("token").update({fullname:50})
@@ -164,9 +164,9 @@ def provider_login():
         try:
             law=auth.sign_in_with_email_and_password(email, password)
             fullname = db.child('Provider').child('Names').child(phone).get().val()
-            client["is_logged_in"] = True
-            client["email"] = law["email"]
-            client["name"] = fullname
+            provider["is_logged_in"] = True
+            provider["email"] = law["email"]
+            provider["name"] = fullname
             flash("Provider Logged In Successfully")
             return redirect(url_for('providerHome'))
         except:
@@ -261,12 +261,13 @@ def approve():
         Approve=db.child("Orders").child(name).child('Approve').get().val()
         db.child('Orders').child(name).update({'Approve':True})
         print(name)
+        print(provider["name"])
         db.child('Client-Provider').child(provider["name"]).update({'Cname':Cname,'Address':Address,"date":date,"Pname":Pname,"Service":service,"Pphone":Pphone,})
         flash("Request from "+name+" has been accepted succesfully. ")
 
-        return redirect('providerhome')
-    else:
-        return redirect('providerhome')
+        return redirect(url_for('providerHome'))
+    # else:
+    #     return redirect('providerhome')
         
 
         
